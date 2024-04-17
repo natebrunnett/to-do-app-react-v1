@@ -1,6 +1,6 @@
 # Note from the developer
 A work in progress 😉 (Server support for login is being developed, offline support for to dos is available!)
-
+If you don't want to connect Mongodb, you don't need to! This app works also with LocalStorage!
 In order to set up this app, json web token needs a string for encryption.
 Please follow the prompt to set up your .env in the server folder.
 
