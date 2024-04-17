@@ -1,4 +1,4 @@
-const Todos = require('./todo-model.js');
+const Todos = require ('./todo-model.js');
 const jwt = require("jsonwebtoken");
 
 class Todo {

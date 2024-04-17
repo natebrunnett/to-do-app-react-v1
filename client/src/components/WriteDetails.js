@@ -6,6 +6,8 @@ import ColorPicker from './ColorPicker.js'
 
 function WriteDetails({todo, setTodos, updateTodo, index}) {
 
+  const [open, setOpen] = useState(false);
+
   const [form, setValues] = useState({
     _id: todo._id,
     title : todo.title,
@@ -48,8 +50,11 @@ function WriteDetails({todo, setTodos, updateTodo, index}) {
           className='absolute bg-white left-50 top-16 mt-10 text-black ml-2 pr-2 pl-2 pb-1 pt-1 w-9 rounded-full font-bold'
           onClick={handleSubmit}
         >💾</button>
-        <button className='absolute bg-white rounded-full p-2 ml-2' >🎨</button>
-        <ColorPicker handleSubmit={handleSubmit} form={form} setValues={setValues}/>
+        {open ? <ColorPicker handleSubmit={handleSubmit} form={form} setValues={setValues} open={open} setOpen={setOpen}/> : 
+        <button 
+          className='absolute bg-white rounded-full p-2 ml-2'
+          onClick={() => setOpen(!open)}
+        >🎨</button>}
     </div>
   )
 }

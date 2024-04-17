@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-function ColorPicker({handleSubmit, setValues, form}) {
+function ColorPicker({handleSubmit, setValues, form, setOpen, open}) {
 
     const [componentDidMount, setComponentDidMount] = useState(false);
 
@@ -18,12 +18,13 @@ function ColorPicker({handleSubmit, setValues, form}) {
         if(componentDidMount === true){
             setComponentDidMount(false)
             handleSubmit();
+            setOpen(!open)
         }
     }, [form])
 
 
     return (
-        <section className='grid grid-cols-3 gap-0 absolute top-5 right-5'>
+        <section className='grid grid-cols-3 gap-0 absolute top-0 right-8'>
             <div 
                 className='w-8 h-8 bg-white border-2 ' 
                 onClick={() => handleClick('text-white')}

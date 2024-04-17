@@ -6,8 +6,9 @@ class User {
 
 	async findAllReturn(req, res){
 		try{
-			const allUsers = await Users.find({});
-			res.send(allUsers)
+			// const allUsers = await Users.find({});
+			// res.send(allUsers)
+            console.log(req.body)
 		}catch(e){
 			res.send({e})
 		}
@@ -24,23 +25,23 @@ class User {
         }
     }
     
-    async addUser(req, res){
-        const salt = 'learn2code8134'
-        try {
-            console.log(req.body)
-            const hash = await argon2.hash(req.body.password, salt);
-            console.log("username = " + req.body.username);
-            console.log("password = " + hash);
-            console.log("email = " + req.body.email);
-            await Users.create({
-                username: req.body.username,
-                password: hash,
-                email: req.body.email
-            })
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // async addUser(req, res){
+    //     const salt = 'learn2code8134'
+    //     try {
+    //         console.log(req.body)
+    //         const hash = await argon2.hash(req.body.password, salt);
+    //         console.log("username = " + req.body.username);
+    //         console.log("password = " + hash);
+    //         console.log("email = " + req.body.email);
+    //         await Users.create({
+    //             username: req.body.username,
+    //             password: hash,
+    //             email: req.body.email
+    //         })
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
 
     // async addItem(req, res){
