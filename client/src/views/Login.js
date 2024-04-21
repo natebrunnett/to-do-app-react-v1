@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import URL from '../components/config.js'
+import * as jose from 'jose';
+import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
+function Login({setUser, setTodos}) {
+    let navigate = useNavigate();
     const [option, setOption] = useState(null);
     const [form, setValues] = useState(
         {
@@ -11,7 +15,9 @@ function Login() {
             confirmPassword: '',
             email: '',
         }
-    )  
+    ) 
+    const [msg, setMsg] = useState('');
+
     const handleChange = (e) => {
         e.preventDefault();
         setValues(
@@ -25,9 +31,30 @@ function Login() {
     const LoginFormSubmission = async() => {
         if(option === 'new'){
             //add
-            // const response = await axios.post(URL + '/users/add', {form})
+            const response = await axios.post(URL + '/users/add', form)
+            console.log(response)
+            if(response.data.ok === false){
+                setMsg(response.data.message);
+                return false;
+            }
+            else{
+                localStorage.setItem("token", JSON.stringify(response.data.token));
+                let decodedToken = jose.decodeJwt(response.data.token);
+                setTodos(decodedToken.todos);
+                setUser(decodedToken.username);
+                return true
+            }
+            /*
+            if the response is ok
+                method to setToken
+                return true
+            else
+                grab error data from response
+                return false
+            */
         } else if(option === 'existing'){
-            //login
+            const response = await axios.post(URL + '/users/login', form)
+            console.log(response)
         }
         return false;
     }
@@ -35,15 +62,15 @@ function Login() {
     const handleSubmit = async(e) => {
         e.preventDefault();
         console.log('submit')
-        let myBool = null;
+        let submitOK = null;
         try {
-            myBool = await LoginFormSubmission()
+            submitOK = await LoginFormSubmission()
         } catch (error) {
-            myBool = false;
+            submitOK = false;
             console.log(error);
         }
-        console.log(myBool)
-        if(myBool === true)
+        console.log(submitOK)
+        if(submitOK === true)
         {
         setValues(
             {
@@ -52,6 +79,10 @@ function Login() {
                 confirmPassword: '',
                 email: '',
             })
+        navigate('/');
+        }
+        else{
+            //do nothing, the form is incomplete
         }
     }
 
@@ -75,6 +106,7 @@ function Login() {
             : option === 'new'?
             <div className='mt-5 flex flex-col'>
                 <h1 className='text-2xl text-center italic '>Ahhh a new user</h1>
+                <h1 className='text-center text-2xl text-red-500 mt-3'>{msg}</h1>
                 <form 
                     className='flex flex-col gap-4 text-2xl mt-3'
                     onSubmit={handleSubmit}

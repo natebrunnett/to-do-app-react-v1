@@ -16,12 +16,15 @@ require('dotenv').config({ path: './.env' });
 const PORT = process.env.PORT || 3030;
 mongoose.set('strictQuery', false);
 
+// const mongoURI = 'mongodb://127.0.0.1:27017/todo-app-v1';
+
 async function connecting(){
 try {
     await mongoose.connect(process.env.MONGO)
     console.log('Connected to the DB')
 } catch ( error ) {
     console.log('ERROR: Seems like your DB is not running, please start it up !!!');
+    console.log(error.message);
 }
 }
 connecting()

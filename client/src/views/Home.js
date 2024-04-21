@@ -7,61 +7,47 @@ import Todos from '../components/Todos'
 import URL from '../components/config.js'
 import DeveloperNotes from '../components/DeveloperNotes';
 
-function Home({user, setUser}) {
+function Home({user, setUser, todos, setTodos}) {
     const defaultColor = "text-lime-400";
-    const [todos, setTodos] = useState([]);
     const [token, setToken] = useState(JSON.parse(localStorage.getItem("token")));
-    
-    useEffect(() => {
-        // let getTodos = async () => {
-        //     try {
-        //         if(user === 'guest'){
-        //             console.log("guest detected")
-        //         }else {
-        //             const response = await axios.get(URL + '/todos/');
-        //             console.log(response);
-        //             setTodos(response.data);
-        //         }
-
-        //     } catch (error) { console.log(error); }
-        // }
-        // getTodos();
-        let detectToken = async () => {
-            if(token){
-                console.log("token detected")
-                //send request to server to verify integrity of token
-                //this will also update any changes made to the todos
-                //use jose to get todos from token
-                let decodedToken = jose.decodeJwt(token);
-                setTodos(decodedToken.todos);
-                setUser(decodedToken.username);
-            }
-            else{
-                console.log("no token detected")
-                try {
-                    //create a guest token
-                    const response = await axios.post(URL + '/users/guest');  
-                    localStorage.setItem("token", JSON.stringify(response.data));
-                    console.log('guest token saved to Local Storage')
-                } catch (error) {
-                    console.log(error);
-                }
+    let processToken = async (token) => {
+        //if there is a token, decode it, set user+todos, save it (for updates)
+        if(token){
+            console.log("token detected")
+            let decodedToken = jose.decodeJwt(token);
+            setTodos(decodedToken.todos);
+            setUser(decodedToken.username);
+            localStorage.setItem("token", JSON.stringify(token));
+        }
+        else{
+            console.log("no token detected")
+            try {
+                //create a guest token
+                const response = await axios.post(URL + '/users/guest');  
+                localStorage.setItem("token", JSON.stringify(response.data));
+                console.log('guest token saved to Local Storage')
+            } catch (error) {
+                console.log(error);
             }
         }
-        detectToken();
+    }
+
+    useEffect(() => {
+        processToken(token);
     }, [token])
     
     
     let addTodo = async(todo) => {
         try {
             todo.color = defaultColor;
-            todo.user = user;
-            const response = await axios.post(URL + '/todos/add', {todo, currentTodos: todos});
+            const response = await axios.post(URL + '/todos/add', {todo, currentTodos: todos, user});
             if(user === 'guest'){
-                /*if user is read as guest, server will send back a token */
-                let decodedToken = jose.decodeJwt(response.data);
-                setTodos(decodedToken.todos);
-                localStorage.setItem("token", JSON.stringify(response.data));
+                processToken(response.data)
+            }
+            else{
+                //in order to simplify code, I might remove this if else
+                /* the server can send back a token regardless */
+                processToken(response.data)
             }
             
         } catch (error) { console.log(error); }
@@ -69,15 +55,15 @@ function Home({user, setUser}) {
 
     let deleteTodo = async(todo, idx) => {
         try {
-            todo.user = user;
             if(user === 'guest'){
                 todo.index = idx; //we only need to add an idx if user is guest
-                const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos});
-                /*if user is read as guest, server will send back a token */
-                console.log(response)
-                let decodedToken = jose.decodeJwt(response.data);
-                setTodos(decodedToken.todos);
-                localStorage.setItem("token", JSON.stringify(response.data));
+                const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos, user});
+                processToken(response.data);
+            }
+            else{
+                todo.index = idx; //we only need to add an idx if user is guest
+                const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos, user});
+                processToken(response.data);
             }
             //console.log(response);
             //setTodos(response.data);
@@ -86,13 +72,15 @@ function Home({user, setUser}) {
 
     let updateTodo = async(form, idx) => {
         try {
-            form.user = user;
             if(user === 'guest'){
                 form.index = idx;
-                const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos});
-                let decodedToken = jose.decodeJwt(response.data);
-                setTodos(decodedToken.todos);
-                localStorage.setItem("token", JSON.stringify(response.data));
+                const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos, user});
+                processToken(response.data);
+            }
+            else{
+                form.index = idx;
+                const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos, user});
+                processToken(response.data);
             }
             //setTodos(response.data);
           } catch (error) { console.log(error); }

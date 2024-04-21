@@ -7,10 +7,10 @@ const todoSchema = new mongoose.Schema({
   });
 
 const userSchema = new mongoose.Schema({
-  username: {type: String, required: true},
+  username: {type: String, required: true, unique: true},
   password: {type: String, required: true},
-  email: {type: String, required: true},
-  todos: {todoSchema}
+  email: {type: String, required: true, unique: true},
+  todos: [{type: todoSchema, required: true}]
 });
 
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("users-todo-app", userSchema);

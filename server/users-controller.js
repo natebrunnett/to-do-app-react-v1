@@ -25,23 +25,40 @@ class User {
         }
     }
     
-    // async addUser(req, res){
-    //     const salt = 'learn2code8134'
-    //     try {
-    //         console.log(req.body)
-    //         const hash = await argon2.hash(req.body.password, salt);
-    //         console.log("username = " + req.body.username);
-    //         console.log("password = " + hash);
-    //         console.log("email = " + req.body.email);
-    //         await Users.create({
-    //             username: req.body.username,
-    //             password: hash,
-    //             email: req.body.email
-    //         })
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    async addUser(req, res){
+        const salt = 'learn2code8134'
+        try {
+            console.log(req.body)
+            if(!req.body.username) res.send({ok: false, message: "username invalid"})
+            if(req.body.password !== req.body.confirmPassword) res.send({ok: false, message: 'passwords do not match'})
+            if(!req.body.email) res.send({ok: false, message: 'email invalid'})
+            const hash = await argon2.hash(req.body.password, salt);
+            console.log("username = " + req.body.username);
+            console.log("password = " + hash);
+            console.log("email = " + req.body.email);
+            await Users.create({
+                username: req.body.username,
+                password: hash,
+                email: req.body.email,
+                todos: []
+            })
+            const token = jwt.sign({ username: req.body.username, todos: []}, process.env.JWT_SECRET, {
+                expiresIn: "365d",
+            });
+            res.send({ok: true, token})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async login(req, res){
+        try {
+            console.log(req.body)
+        } catch (error) {
+            console.log(req.body)
+            res.send(error)
+        }
+    }
 
 
     // async addItem(req, res){
