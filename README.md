@@ -1,6 +1,6 @@
 # Note from the developer
 ~Temporary this app requires a Mongodb to function... a quick access local version of this app is under works
-Setting up
+/nSetting up
 
     $ git clone ...git link...
     Install node_modules for server and client
