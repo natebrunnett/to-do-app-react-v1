@@ -1,5 +1,5 @@
 # Note from the developer
-~Temporary this app requires a Mongodb to function... a quick access local version of this app is under works~
+~Temporary this app requires a Mongodb to function... a quick access local version of this app is under works
 Setting up
 
     $ git clone ...git link...
@@ -21,7 +21,7 @@ Please follow the prompt to set up your .env in the server folder.
     JWT_SECRET=anyStringToEncryptYourDataHere
     //save and install node_modules in the next step
 
-~Login support for an added Mongodb is available~
+~Login support for an added Mongodb is available
 
     To add a Mongodb:
     Open the server/.env in your editor
