@@ -2,7 +2,7 @@
 ~Temporary this app requires a Mongodb to function... a quick access local version of this app is under works
 
     If you want use this project without Mongodb, please comment out the model imports in the controller.js files
-    And the server-controller should recognize you as guest without ever interacting with the mongodb
+    And the server-controller should recognize you as guest without ever interacting with the Mongodb
     
 ...Setting up:
 
