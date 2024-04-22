@@ -11,7 +11,7 @@
     /server
     $ nodemon
 
-If you don't want to connect Mongodb, you don't need to! This app works also with LocalStorage!
+~If you don't want to connect Mongodb, you don't need to!~ This app works also with LocalStorage!
 In order to set up this app, json web token needs a string for encryption.
 Please follow the prompt to set up your .env in the server folder.
 
