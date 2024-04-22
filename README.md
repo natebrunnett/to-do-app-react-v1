@@ -1,5 +1,9 @@
 # Note from the developer
 ~Temporary this app requires a Mongodb to function... a quick access local version of this app is under works
+
+    If you want use this project without mongodb, please comment out the model imports in the controller.js files
+    And the server-controller should recognize you as guest without ever interacting with the mongodb
+    
 ...Setting up:
 
     $ git clone ...git link...
