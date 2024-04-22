@@ -24,7 +24,7 @@ function ColorPicker({handleSubmit, setValues, form, setOpen, open}) {
 
 
     return (
-        <section className='grid grid-cols-3 gap-0 absolute top-0 right-8'>
+        <section className='grid grid-cols-3 gap-0 absolute top-0 right-5'>
             <div 
                 className='w-8 h-8 bg-white border-2 ' 
                 onClick={() => handleClick('text-white')}

@@ -5,11 +5,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 function Calendar() {
   const handleExportToCalendar = (event) => {
     // Format event data into an .ics file
+    console.log(event)
     const eventData = {
       title: event.title,
       start: event.start,
       end: event.end,
     };
+    console.log(eventData);
 
     const icsContent = generateICS(eventData);
 

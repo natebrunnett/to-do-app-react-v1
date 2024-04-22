@@ -32,7 +32,7 @@ function Write({todos, setTodos, addTodo}) {
         <div className='flex flex-row justify-center mt-3'>
             <input 
                 className='rounded-l-2xl pl-2' 
-                placeholder='clean the pool'
+                placeholder='...my first to do'
                 name="title"
                 value={form.title}
                 onChange={handleChange}

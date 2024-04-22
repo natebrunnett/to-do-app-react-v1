@@ -1,6 +1,7 @@
 const Users = require('./user-model.js');
 const jwt = require("jsonwebtoken");
 const argon2 = require("argon2");
+const { response } = require('express');
 
 class User {
 
@@ -28,14 +29,13 @@ class User {
     async addUser(req, res){
         const salt = 'learn2code8134'
         try {
-            console.log(req.body)
             if(!req.body.username) res.send({ok: false, message: "username invalid"})
             if(req.body.password !== req.body.confirmPassword) res.send({ok: false, message: 'passwords do not match'})
             if(!req.body.email) res.send({ok: false, message: 'email invalid'})
             const hash = await argon2.hash(req.body.password, salt);
-            console.log("username = " + req.body.username);
-            console.log("password = " + hash);
-            console.log("email = " + req.body.email);
+            // console.log("username = " + req.body.username);
+            // console.log("password = " + hash);
+            // console.log("email = " + req.body.email);
             await Users.create({
                 username: req.body.username,
                 password: hash,
@@ -53,55 +53,24 @@ class User {
 
     async login(req, res){
         try {
-            console.log(req.body)
+            const user = await Users.findOne({username: req.body.username});
+            if(!user) res.send({ok: false, message: "User not found"});
+            const match = await argon2.verify(user.password, req.body.password);
+            if(match) {
+                const token = jwt.sign({ username: req.body.username, todos: user.todos}, process.env.JWT_SECRET, {
+                    expiresIn: "365d",
+                });
+                res.send({ok: true, token})
+            } else {
+                res.send({ok: false, message: "password invalid"});
+            }
+            
+
         } catch (error) {
-            console.log(req.body)
-            res.send(error)
+            console.log('error occured')
+            console.log(e)
         }
     }
-
-
-    // async addItem(req, res){
-    //     try{
-    //         await Todos.create(req.body);
-    //         const items = await Todos.find({});
-    //         res.send(items)
-    //     }catch(e){
-    //         res.send({e})
-    //     }
-    // }
-
-    // async updateItem(req, res){
-
-    //     try{
-    //         console.log(req.body)
-    //         const theOne = await Todos.findById(req.body._id);
-    //         console.log("theOne " + theOne)
-    //         await Todos.updateOne(theOne, 
-    //         {
-    //             title : req.body.title,
-    //             description : req.body.description || '',
-    //             color: req.body.color || ''
-    //         });
-    //         const items = await Todos.find({});
-    //         res.send(items)
-    //     }catch(e){
-    //         console.log(e)
-    //     }
-    // }
-
-    // async deleteItem(req, res){
-    //     try{
-    //         console.log(req.body)
-    //         const theOne = await Todos.findOne(req.body);
-    //         console.log("theOne " + theOne)
-    //         await Todos.deleteOne(theOne);
-    //         const items = await Todos.find({});
-    //         res.send(items)
-    //     }catch(e){
-    //         res.send({e})
-    //     }
-    // }
 
 }
 

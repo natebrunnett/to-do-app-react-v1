@@ -55,6 +55,17 @@ function Login({setUser, setTodos}) {
         } else if(option === 'existing'){
             const response = await axios.post(URL + '/users/login', form)
             console.log(response)
+            if(response.data.ok === true){
+                localStorage.setItem("token", JSON.stringify(response.data.token));
+                let decodedToken = jose.decodeJwt(response.data.token)
+                setTodos(decodedToken.todos);
+                setUser(decodedToken.username);
+                return true
+            }
+            else{
+                setMsg(response.data.message);
+                return false;
+            }
         }
         return false;
     }
@@ -79,6 +90,7 @@ function Login({setUser, setTodos}) {
                 confirmPassword: '',
                 email: '',
             })
+        setMsg('');
         navigate('/');
         }
         else{
@@ -148,6 +160,7 @@ function Login({setUser, setTodos}) {
              :
             <div className='mt-5 flex flex-col'>
                 <h1 className='text-2xl text-center italic '>Welcome back dude!</h1>
+                <h1 className='text-center text-2xl text-red-500 mt-3'>{msg}</h1>
                 <form 
                     className='flex flex-col gap-4 text-2xl mt-3'
                     onSubmit={handleSubmit}
@@ -173,7 +186,7 @@ function Login({setUser, setTodos}) {
             </div>
             }
             {/*******  form end *********/}
-            <button onClick={() => console.log(form)}>Debug form</button>
+            {/* <button onClick={() => console.log(form)}>Debug form</button> */}
         </div>
   )
 }

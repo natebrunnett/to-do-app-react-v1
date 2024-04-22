@@ -41,55 +41,30 @@ function Home({user, setUser, todos, setTodos}) {
         try {
             todo.color = defaultColor;
             const response = await axios.post(URL + '/todos/add', {todo, currentTodos: todos, user});
-            if(user === 'guest'){
-                processToken(response.data)
-            }
-            else{
-                //in order to simplify code, I might remove this if else
-                /* the server can send back a token regardless */
-                processToken(response.data)
-            }
-            
+            processToken(response.data)
         } catch (error) { console.log(error); }
     }
 
     let deleteTodo = async(todo, idx) => {
         try {
-            if(user === 'guest'){
-                todo.index = idx; //we only need to add an idx if user is guest
-                const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos, user});
-                processToken(response.data);
-            }
-            else{
-                todo.index = idx; //we only need to add an idx if user is guest
-                const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos, user});
-                processToken(response.data);
-            }
-            //console.log(response);
-            //setTodos(response.data);
+            todo.index = idx; //we only need to add an idx if user is guest
+            const response = await axios.post(URL + '/todos/delete', {todo, currentTodos: todos, user});
+            processToken(response.data);
         } catch (error) { console.log(error); }
     }
 
     let updateTodo = async(form, idx) => {
         try {
-            if(user === 'guest'){
-                form.index = idx;
-                const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos, user});
-                processToken(response.data);
-            }
-            else{
-                form.index = idx;
-                const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos, user});
-                processToken(response.data);
-            }
-            //setTodos(response.data);
+            form.index = idx;
+            const response = await axios.post(URL + '/todos/update', {form, currentTodos: todos, user});
+            processToken(response.data);
           } catch (error) { console.log(error); }
     }
 
 
 
     return (
-    <main className='h-screen bg-slate-700'>
+    <main className='h-screen bg-slate-700 flex flex-col items-center'>
         <Header />
         <Write setTodos={setTodos} todos={todos} addTodo={addTodo}/>
         <Todos todos={todos} deleteTodo={deleteTodo} setTodos={setTodos} updateTodo={updateTodo}/>

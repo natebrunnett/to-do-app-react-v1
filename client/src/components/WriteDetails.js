@@ -16,9 +16,9 @@ function WriteDetails({todo, setTodos, updateTodo, index}) {
     color: todo.color || 'text-lime-400',
   })
 
-  useEffect(() => {
-    console.log(form)
-  }, [form])
+  // useEffect(() => {
+  //   console.log(form)
+  // }, [form])
 
   let handleChange = (e) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ function WriteDetails({todo, setTodos, updateTodo, index}) {
   return (
     <div className={topDivStyle}>
         <textarea 
-          className='bg-black p-2 pr-10 pb-20 rounded-2xl' 
+          className='bg-black p-2 pr-10 pb-20 rounded-2xl text-sm w-64' 
           placeholder='description' 
           name='description'
           onChange={handleChange}
