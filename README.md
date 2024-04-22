@@ -23,7 +23,7 @@ Please follow the prompt to set up your .env in the server folder.
     $ touch .env 
     //open the file in the editor and create a variable
     JWT_SECRET=anyStringToEncryptYourDataHere
-    //save and install node_modules in the next step
+    //save
 
 ~Login support for an added Mongodb is available
 
